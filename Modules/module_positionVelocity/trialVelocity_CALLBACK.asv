@@ -1,0 +1,59 @@
+function trialVelocity_CALLBACK(src,evnt,dataCell,data)
+%trialVelocity_CALLBACK.m callback function to generate trial velocity
+%module
+
+%open GUI
+trialVelGUIData = trialVelGUI();
+
+set(0,'CurrentFigure',trialVelGUIData.figHandle); %set current figure to background by directly accessing current figure property
+
+%get trial velocities
+[xVelLeftMat,xVelRightMat,yVelMat,vel] = getTrialVelocity(data,dataCell);
+
+%calculate means and standard error
+xLeftMean = mean(xVelLeftMat);
+xLeftSEM = std(xVelLeftMat)/sqrt(size(xVelLeftMat,1));
+xRightMean = mean(xVelRightMat);
+xRightSEM = std(xVelRightMat)/sqrt(size(xVelRightMat,1));
+
+yMean = mean(yVelMat);
+ySEM = std(yVelMat)/sqrt(size(yVelMat,1));
+
+%get length
+plotLength = size(xVelLeftMat,2);
+normLength = linspace(0,1,plotLength);
+
+%plot
+%Y
+trialVelGUIData.yPlot = subplot('Position',[0.07 0.6088 0.86 0.3162]);
+trialVelGUIData.yLineS = shadedErrorBar(normLength,yMean,ySEM,'b');
+trialVelGUIData.YTitlte = title('Y Velocity','fontsize',15);
+set(gca,'fontsize',12);
+trialVelGUIData.YxLabel = xlabel('Normalized Trial Time','fontsize',15);
+trialVelGUIData.YyLabel = ylabel('Y Velocity','fontsize',15);
+
+%X
+trialVelGUIData.xPlot = subplot('Position',[0.07 0.16 0.86 0.3162]);
+trialVelGUIData.xLeftLine = shadedErrorBar(normLength,xLeftMean,xLeftSEM,'r');
+hold on;
+trialVelGUIData.xRightLine = shadedErrorBar(normLength,xRightMean,xRightSEM,'g');
+trialVelGUIData.XTitlte = title('X Velocity','fontsize',15);
+set(gca,'fontsize',12);
+ylim([-40 40]);
+trialVelGUIData.XxLabel = xlabel('Normalized Trial Time','fontsize',15);
+trialVelGUIData.XyLabel = ylabel('X Velocity','fontsize',15);
+
+%set callback for buttons
+set(integrationGUIData.exportFig,'Callback',{@exportFig_CALLBACK,trialVelGUIData,false});
+set(integrationGUIData.exportData,'Callback',{@exportData_CALLBACK,xVelLeftMat,xVelRightMat,yVelMat,vel});
+set(integrationGUIData.printFig,'Callback',{@exportFig_CALLBACK,trialVelGUIData,true});
+end
+
+function exportData_CALLBACK(src,evnt,xVelLeftMat,xVelRightMat,yVelMat,vel)
+assignin('base','xVelLeftMat',xVelLeftMat);
+assignin('base','xVelRightMat',xVelRightMat);
+assignin('base','yVelMat',yVelMat);
+assignin('base','vel',vel);
+end
+
+

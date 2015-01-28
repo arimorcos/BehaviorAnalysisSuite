@@ -1,0 +1,5 @@
+%This file specifies parameters for the module, separated by |. The first string is the name of the module.
+%The second string is the callback as it will run. The first two arguments of the callback must be src and evnt.
+%The remaining objects must be one of the following: dataCell, data, exper, dataFlag or guiObjects
+
+Turn Segment|turnSegment_CALLBACK(src,evnt,dataCell,guiObjects)

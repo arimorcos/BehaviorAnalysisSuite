@@ -1,0 +1,91 @@
+function exportTrialVelGUI(trialVelGUIData,shouldPrint)
+%exportGUI.m Function to create export data GUI
+
+screens = get(0,'MonitorPositions');
+if size(screens,1) > 1
+    scrn = screens(2,:);
+else
+    scrn = screens(1,:);
+end
+
+exportGUIData.figHandle = figure('Name','Export Data','NumberTitle','Off','MenuBar','none');
+set(exportGUIData.figHandle,'OuterPosition',[scrn(1)+0.5*(scrn(3)-scrn(1)) 0.7*(scrn(4) - scrn(2))...
+    0.2*(scrn(3)-scrn(1)) .3*scrn(4)]);
+
+exportGUIData.xPlot = uicontrol('FontName','Arial','FontSize',15,'FontWeight','bold',...
+    'ForegroundColor',[0 0 0],'Units','Normalized','Position',[.1 .7 .8 .2],...
+    'String','Y Plot','Style','pushbutton','BackgroundColor',[0.7969 0.7969 0.7969],...
+    'Callback',{@exportFig_CALLBACK,trialVelGUIData,0,shouldPrint,exportGUIData});
+
+exportGUIData.xPlot = uicontrol('FontName','Arial','FontSize',15,'FontWeight','bold',...
+    'ForegroundColor',[0 0 0],'Units','Normalized','Position',[.1 .4 .8 .2],...
+    'String','X Plot','Style','pushbutton','BackgroundColor',[0.7969 0.7969 0.7969],...
+    'Callback',{@exportFig_CALLBACK,trialVelGUIData,1,shouldPrint,exportGUIData});
+
+exportGUIData.both = uicontrol('FontName','Arial','FontSize',15,'FontWeight','bold',...
+    'ForegroundColor',[0 0 0],'Units','Normalized','Position',[.1 .1 .8 .2],...
+    'String','Both','Style','pushbutton','BackgroundColor',[0.7969 0.7969 0.7969],...
+    'Callback',{@exportFig_CALLBACK,trialVelGUIData,2,shouldPrint,exportGUIData});
+
+end
+
+function exportFig_CALLBACK(src,evnt,trialVelGUIData,subset,shouldPrint,exportGUIData)
+saveFig = figure('visible','off','OuterPosition',[0 0 1 1]);
+set(saveFig,'Units','Normalized','PaperPositionMode','auto');
+
+switch subset 
+    case 0 %x plot only
+        savePlot = copyobj(trialVelGUIData.xPlot,saveFig);
+        set(savePlot,\'Position',[0.1300 0.1100 0.7750 0.8150]);
+    case 1 %y plot only
+        savePlot = copyobj(trialVelGUIData.yPlot,saveFig);
+        set(savePlot,'Units','Normalized','Position',[0.1300 0.1100 0.7750 0.8150]);
+    case 2 %both
+        savePlot(1) = copyobj(trialVelGUIData.xPlot,saveFig);
+        savePlot(2) = copyobj(trialVelGUIData.yPlot,saveFig);
+        set(savePlot(1),'Units','Normalized','Position',[0.1300 0.1100 0.7750 0.3412]);
+        set(savePlot(2),'Units','Normalized','Position',[0.1300 0.5838 0.7750 0.3412]);
+end
+
+if shouldPrint
+    for i=1:length(savePlot)
+        set(savePlot(i),'FontSize',15);
+        set(get(savePlot(i),'XLabel'),'FontSize',16);
+        set(get(savePlot(i),'YLabel'),'FontSize',16);
+        set(get(savePlot(i),'Title'),'FontSize',18);
+    end
+    orient landscape;
+    printdlg(saveFig);
+    return;
+else
+    for i=1:length(savePlot)
+        set(savePlot(i),'FontSize',20);
+        set(get(savePlot(i),'XLabel'),'FontSize',28);
+        set(get(savePlot(i),'YLabel'),'FontSize',28);
+        set(get(savePlot(i),'Title'),'FontSize',28);
+    end
+end
+
+
+[filename,pathname] = uiputfile({'*.eps','EPS (*.eps)';...
+    '*.jpg','JPEG Image(*.jpg)';'*.fig','MATLAB Figure (*.fig)';...
+    '*.png','PNG Image (*.png)';'*.tif','TIFF Image (*.tif)'});
+if filename ~= 0
+    switch upper(filename(find(filename=='.',1,'last')+1:end))
+        case 'EPS'
+            print(saveFig,[pathname,filename],'-depsc','-loose','-r300');
+        case 'JPG'
+            print(saveFig,[pathname,filename],'-djpeg','-loose','-r300');
+        case 'FIG'
+            saveas(saveFig,[pathname,filename],'-loose','-r300');
+        case 'PNG'
+            print(saveFig,[pathname,filename],'-dpng','-loose','-r300');
+        case 'TIF'
+            print(saveFig,[pathname,filename],'-dtiff','-loose','-r300');
+    end
+end
+close(saveFig);
+delete(exportGUIData.figHandle);
+end
+    
+    
