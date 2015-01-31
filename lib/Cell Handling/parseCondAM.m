@@ -45,6 +45,11 @@ end
 %remove spaces
 str = str(~isspace(str));
 
+%remove last character semicolon
+if strcmp(str(end),';')
+    str = str(1:end-1);
+end
+
 %look for semicolon
 semicolons = strfind(str,';');
 nConds = length(semicolons)+1;
@@ -58,6 +63,7 @@ if atCond; procString = cell(nConds,2);else procString = cell(nConds,1); end
 
 for i=1:nConds
     clear operator
+    
     %Break string into components
     if i < nConds
         currStr = str(condInd:semicolons(i)-1); %partition string into single condition if one
