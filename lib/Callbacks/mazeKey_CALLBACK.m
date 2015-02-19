@@ -11,8 +11,8 @@ if size(screens,1) > 1
 else
     scrn = screens(1,:);
 end
-set(mazeFig,'OuterPosition',[scrn(1)+0.5*(scrn(3)-scrn(1)) scrn(2)/30 ...
-    0.3*(scrn(3)-scrn(1)) 29*scrn(4)/30]); %set position
+set(mazeFig,'OuterPosition',[0.7*scrn(3) scrn(2)/30 ...
+    0.3*scrn(3) 29*scrn(4)/30]); %set position
 
 [mazeKey,folders,folderNames,fileNames,cancel] = generateMazeKey(guiObjects.userData.path,...
     guiObjects.userData.folders,guiObjects); %generate the maze key
