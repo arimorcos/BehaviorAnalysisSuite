@@ -9,8 +9,8 @@ function [shuffleGUI] = shuffleGUI()
     end
     
     shuffleGUI.figHandle = figure('Name','Shuffle','NumberTitle','Off','MenuBar','none');
-    set(shuffleGUI.figHandle,'OuterPosition',[scrn(1)+0.5*(scrn(3)-scrn(1)) 0.5*(scrn(4) - scrn(2))...
-        0.5*(scrn(3)-scrn(1)) .5*scrn(4)]);
+    set(shuffleGUI.figHandle,'OuterPosition',[scrn(1) 0.5*scrn(4)...
+        0.5*scrn(3) 0.5*scrn(4)]);
     
     %create text entry
     uicontrol('FontName','Arial','FontSize',15,'FontWeight','bold','ForegroundColor',[0 0 0],'Units','Normalized',...
