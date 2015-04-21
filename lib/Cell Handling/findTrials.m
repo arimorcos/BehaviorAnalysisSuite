@@ -41,7 +41,11 @@ if isnumeric(cond) || strcmp(cond(1),'[')
         pattStr = cond(startInd:stopInd);
         pattCond = eval(pattStr);
     end
-    ind = findPatternTrials(dataCell,pattCond);
+    ind = false(length(dataCell),1);
+    for pattern = 1:size(pattCond,1)
+        addInd = findPatternTrials(dataCell,pattCond(pattern,:));
+        ind(addInd) = true;
+    end
     if length(cond) > stopInd+1 %if longer than stopInd+1
         cond = cond(stopInd+2:end);
         pattInd = ind;
