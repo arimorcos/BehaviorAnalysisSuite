@@ -1,7 +1,7 @@
 #Behavioral Analysis Suite v1.0 Documentation (Last Updated: 8/3/13)
 
 ##Introduction
-This guide will teach you how to use the Behavioral Analysis Suite, a software package allowing easy, fast analysis of behavioral data. It should work for any behavioral paradigm with a discreet trial structure. Its features include:
+This guide will teach you how to use the Behavioral Analysis Suite, a software package allowing easy, fast analysis of behavioral data. It should work for any behavioral paradigm with a discrete trial structure. Its features include:
 
 * Both online and offline analysis
 * Trial sorting according to any parameter
